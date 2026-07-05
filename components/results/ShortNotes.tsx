@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { ChevronDown, ChevronUp, Download } from 'lucide-react'
 import ModuleBadge from '@/components/shared/ModuleBadge'
 import HighYieldTag from '@/components/shared/HighYieldTag'
 import type { Module, Topic } from '@/types'
@@ -239,6 +239,30 @@ function ModuleSection({ module }: { module: Module }) {
 }
 
 export default function ShortNotes({ modules }: { modules: Module[] }) {
+  const handleDownload = () => {
+    let md = '# PallyME Short Notes\n\n'
+    modules.forEach(mod => {
+      md += `## ${mod.title}\n\n`
+      mod.topics.forEach(topic => {
+        md += `### ${topic.title}${topic.isHighYield ? ' (High Yield)' : ''}\n\n`
+        md += `${topic.content}\n\n`
+        if (topic.keyTerms.length > 0) {
+          md += `**Key Terms:** ${topic.keyTerms.join(', ')}\n\n`
+        }
+      })
+    })
+
+    const blob = new Blob([md], { type: 'text/markdown' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'PallyME_Short_Notes.md'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   if (!modules.length) {
     return (
       <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--muted-400)' }}>
@@ -249,6 +273,31 @@ export default function ShortNotes({ modules }: { modules: Module[] }) {
 
   return (
     <div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <button
+          onClick={handleDownload}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 16px',
+            background: 'var(--blueprint-500)',
+            color: 'white',
+            border: 'none',
+            borderRadius: 8,
+            fontFamily: 'var(--font-display)',
+            fontSize: '0.9rem',
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'background 0.2s',
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.background = 'var(--blueprint-400)')}
+          onMouseOut={(e) => (e.currentTarget.style.background = 'var(--blueprint-500)')}
+        >
+          <Download size={16} />
+          Download Notes
+        </button>
+      </div>
       {modules.map((mod) => (
         <ModuleSection key={mod.id} module={mod} />
       ))}

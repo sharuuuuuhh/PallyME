@@ -43,7 +43,8 @@ Return ONLY valid JSON matching this exact structure (no markdown fences):
 }
 
 Rules:
-- Be concise. Students are under exam pressure — dense but scannable.
+- Be comprehensive and exhaustive. Cover every aspect, nuance, and necessary detail from the notes.
+- Keep the format structured and scannable. Students are under exam pressure.
 - Bold all key terms using **markdown bold**.
 - One module per major section, one topic per subtopic.
 - isHighYield defaults to false (the PYQ pipeline sets it later).
